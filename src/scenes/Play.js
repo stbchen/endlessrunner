@@ -47,19 +47,20 @@ class Play extends Phaser.Scene {
         this.background.tilePositionX += 4;
         //this.p1.update();
         // check keyboard input
-        if(cursors.left.isDown) {
-            this.player.body.setAccelerationX(-this.ACCELERATION);
-            this.player.setFlip(true, false);
-            // see: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.Animation.html#play__anchor
-            // play(key [, ignoreIfPlaying] [, startFrame])
-        } else if(cursors.right.isDown) {
-            this.player.body.setAccelerationX(this.ACCELERATION);
-            this.player.resetFlip();
-        } else {
-            // set acceleration to 0 so DRAG will take over
-            this.player.body.setAccelerationX(0);
-            this.player.body.setDragX(this.DRAG);
-        }
+        
+        // if(cursors.left.isDown) {
+        //     this.player.body.setAccelerationX(-this.ACCELERATION);
+        //     this.player.setFlip(true, false);
+        //     // see: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.Animation.html#play__anchor
+        //     // play(key [, ignoreIfPlaying] [, startFrame])
+        // } else if(cursors.right.isDown) {
+        //     this.player.body.setAccelerationX(this.ACCELERATION);
+        //     this.player.resetFlip();
+        // } else {
+        //     // set acceleration to 0 so DRAG will take over
+        //     this.player.body.setAccelerationX(0);
+        //     this.player.body.setDragX(this.DRAG);
+        // }
 
         // check if player is grounded
         this.player.isGrounded = this.player.body.touching.down;
