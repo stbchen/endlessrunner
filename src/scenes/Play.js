@@ -6,6 +6,7 @@ class Play extends Phaser.Scene {
         this.load.image('player', './assets/player.png');
         this.load.image('background', './assets/background.png');
         this.load.image('block', './assets/block.png');
+        this.load.image('enemy1', './assets/enemy1.png');
     }
     create() {
         // Adding background and player
@@ -35,7 +36,10 @@ class Play extends Phaser.Scene {
         this.player = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'player').setScale(SCALE);
         this.player.setCollideWorldBounds(true);
         this.player.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
-                
+        
+        // Adding enemy1
+        //this.enemy1 = new Enemy1(this, game.config.width, game.config.height/2, 'enemy1', 0).setOrigin(0,0);
+        
         // Adding keyboard controls
         cursors = this.input.keyboard.createCursorKeys();
         //keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -45,9 +49,11 @@ class Play extends Phaser.Scene {
     }
     update() {
         this.background.tilePositionX += 4;
+        //this.enemy1.update();
         //this.p1.update();
-        // check keyboard input
         
+        // check keyboard input
+
         // if(cursors.left.isDown) {
         //     this.player.body.setAccelerationX(-this.ACCELERATION);
         //     this.player.setFlip(true, false);
@@ -69,15 +75,14 @@ class Play extends Phaser.Scene {
             this.jumps = this.MAX_JUMPS;
             this.jumping = false;
         } else {
-            //this.player.anims.play('jump');
+            // JUMP ANIMATION
+            // this.player.anims.play('jump');
         }
         // allow steady velocity change up to a certain key down duration
         // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.DownDuration__anchor
         if(this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
             this.player.body.velocity.y = this.JUMP_VELOCITY;
             this.jumping = true;
-        } else {
-            //this.upKey.tint = 0xFFFFFF;
         }
         // finally, letting go of the UP key subtracts a jump
         // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.UpDuration__anchor
