@@ -3,7 +3,10 @@ class Play extends Phaser.Scene {
         super("playScene");
     }
     preload() {
-        this.load.image('player', './assets/player.png');
+        this.load.spritesheet('player', './assets/runnerFront.png', {frameWidth: 120, frameHeight: 120, startFrame: 0, endFrame: 11});
+        this.load.spritesheet('player_back', './assets/runnerBack.png', {frameWidth: 120, frameHeight: 120, startFrame: 0, endFrame: 11});
+
+        //this.load.image('player', './assets/player.png');
         this.load.image('background', './assets/background.png');
         this.load.image('block', './assets/block.png');
         this.load.image('enemy1', './assets/enemy1.png');
@@ -12,6 +15,18 @@ class Play extends Phaser.Scene {
         // Adding background and player
         this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0, 0);
         //this.p1 = new Player(this, game.config.width/4, game.config.height - 140, 'player').setOrigin(0,0);
+        this.anims.create({
+            key: 'run_front',
+            frames: this.anims.generateFrameNumbers('player', {start: 0, end: 11, first: 0}),
+            frameRate: 15,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'run_back',
+            frames: this.anims.generateFrameNumbers('player', {start: 0, end: 11, first: 0}),
+            frameRate: 15,
+            repeat: -1
+        });
 
         // variables and settings
         // All the physics on player movement from Nathan Altice's Movement Studies: https://github.com/nathanaltice/MovementStudies
@@ -33,7 +48,7 @@ class Play extends Phaser.Scene {
         }
         
         // Adding physics player
-        this.player = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'player').setScale(SCALE);
+        this.player = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'player').setScale(SCALE).setVisible(false);
         this.player.setCollideWorldBounds(true);
         this.player.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
         
@@ -46,9 +61,20 @@ class Play extends Phaser.Scene {
 
         this.physics.add.collider(this.player, this.ground);
 
+        this.player.anims.play("run_front");
+        this.playerBack = this.add.sprite(this.player.x, this.player.y, 'player_back').setVisible(true);
+        this.playerBack.anims.play("run_back");
+
+        /*this.lookTimer = */this.time.delayedCall(500, this.lookBack, [], this);
+
     }
     update() {
         this.background.tilePositionX += 4;
+
+        this.playerBack.setX(this.player.x);
+        this.playerBack.setY(this.player.y);
+        
+
         //this.enemy1.update();
         //this.p1.update();
         
@@ -90,5 +116,26 @@ class Play extends Phaser.Scene {
             this.jumps--;
             this.jumping = false;
         }
+    }
+
+    lookBack() {
+        let lookingBack = Phaser.Math.Between(0, 1);
+
+        if (lookingBack) {
+            this.playerBack.setVisible(true);
+            this.player.setVisible(false);
+            console.log("looking back");
+            console.log("playerBack: "+ this.playerBack.visible);
+            console.log("player: "+ this.playerBack.visible);
+            console.log("///////////////////////");
+        } else {
+            this.playerBack.setVisible(false);
+            this.player.setVisible(true);
+            console.log("looking forward");
+            console.log("playerBack: "+ this.playerBack.visible);
+            console.log("player: "+ this.playerBack.visible);
+            console.log("///////////////////////");
+        }
+        this.time.delayedCall(500, this.lookBack, [], this);
     }
 }
