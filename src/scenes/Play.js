@@ -23,7 +23,7 @@ class Play extends Phaser.Scene {
         });
         this.anims.create({
             key: 'run_back',
-            frames: this.anims.generateFrameNumbers('player', {start: 0, end: 11, first: 0}),
+            frames: this.anims.generateFrameNumbers('player_back', {start: 0, end: 11, first: 0}),
             frameRate: 15,
             repeat: -1
         });
@@ -48,7 +48,7 @@ class Play extends Phaser.Scene {
         }
         
         // Adding physics player
-        this.player = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'player').setScale(SCALE).setVisible(false);
+        this.player = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'player').setScale(SCALE);
         this.player.setCollideWorldBounds(true);
         this.player.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
         
@@ -62,10 +62,11 @@ class Play extends Phaser.Scene {
         this.physics.add.collider(this.player, this.ground);
 
         this.player.anims.play("run_front");
-        this.playerBack = this.add.sprite(this.player.x, this.player.y, 'player_back').setVisible(true);
+
+        this.playerBack = this.add.sprite(this.player.x, this.player.y, 'player_back').setScale(SCALE).setVisible(false);
         this.playerBack.anims.play("run_back");
 
-        /*this.lookTimer = */this.time.delayedCall(500, this.lookBack, [], this);
+        this.time.delayedCall(500, this.lookBack, [], this);
 
     }
     update() {
@@ -119,23 +120,15 @@ class Play extends Phaser.Scene {
     }
 
     lookBack() {
-        let lookingBack = Phaser.Math.Between(0, 1);
+        let lookingBack = Phaser.Math.Between(0, 2);    // random chance that the player sprite is looking back (probability is 1/max+1)
 
-        if (lookingBack) {
+        if (lookingBack === 0) {
             this.playerBack.setVisible(true);
             this.player.setVisible(false);
-            console.log("looking back");
-            console.log("playerBack: "+ this.playerBack.visible);
-            console.log("player: "+ this.playerBack.visible);
-            console.log("///////////////////////");
         } else {
             this.playerBack.setVisible(false);
             this.player.setVisible(true);
-            console.log("looking forward");
-            console.log("playerBack: "+ this.playerBack.visible);
-            console.log("player: "+ this.playerBack.visible);
-            console.log("///////////////////////");
         }
-        this.time.delayedCall(500, this.lookBack, [], this);
+        this.time.delayedCall(500, this.lookBack, [], this);    // delayed recursive calls
     }
 }
