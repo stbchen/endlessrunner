@@ -5,19 +5,19 @@ class Enemy1 extends Phaser.GameObjects.Sprite {
         scene.add.existing(this);
 
         // Set enemy1 speed
-        this.moveSpeed = 2;
+        this.moveSpeed = 3;
     }
     update() {
-        // Move enemy to the left
-        this.x -= this.moveSpeed;
+        // Move enemy to the right
+        this.x += this.moveSpeed;
 
         // If enemy is off screen, reset it
-        if (this.x <= 0 - this.width) {
+        if (this.x >= game.config.width - this.width) {
             this.reset();
         }
     }
 
     reset() {
-        this.x = game.config.width;
+        this.x = 0;
     }
 }
