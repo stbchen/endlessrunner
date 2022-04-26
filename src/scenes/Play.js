@@ -3,11 +3,11 @@ class Play extends Phaser.Scene {
         super("playScene");
     }
     preload() {
-        this.load.spritesheet('player', './assets/runnerFront.png', {frameWidth: 120, frameHeight: 120, startFrame: 0, endFrame: 11});
-        this.load.spritesheet('player_back', './assets/runnerBack.png', {frameWidth: 120, frameHeight: 120, startFrame: 0, endFrame: 11});
+        this.load.spritesheet('player', './assets/runnerFront.png', {frameWidth: 128, frameHeight: 168, startFrame: 0, endFrame: 7});
+        this.load.spritesheet('player_back', './assets/runnerBack.png', {frameWidth: 128, frameHeight: 168, startFrame: 0, endFrame: 7});
 
         //this.load.image('player', './assets/player.png');
-        this.load.image('background', './assets/background.png');
+        this.load.image('background', './assets/background_day.png');
         this.load.image('block', './assets/block.png');
         this.load.image('enemy1', './assets/enemy1.png');
         this.load.image('enemy2', './assets/enemy.png');
@@ -19,14 +19,14 @@ class Play extends Phaser.Scene {
         //this.p1 = new Player(this, game.config.width/4, game.config.height - 140, 'player').setOrigin(0,0);
         this.anims.create({
             key: 'run_front',
-            frames: this.anims.generateFrameNumbers('player', {start: 0, end: 11, first: 0}),
-            frameRate: 15,
+            frames: this.anims.generateFrameNumbers('player', {start: 0, end: 7, first: 0}),
+            frameRate: 12,
             repeat: -1
         });
         this.anims.create({
             key: 'run_back',
-            frames: this.anims.generateFrameNumbers('player_back', {start: 0, end: 11, first: 0}),
-            frameRate: 15,
+            frames: this.anims.generateFrameNumbers('player_back', {start: 0, end: 7, first: 0}),
+            frameRate: 12,
             repeat: -1
         });
 
