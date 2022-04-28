@@ -5,12 +5,12 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.spritesheet('player', './assets/runnerFront.png', {frameWidth: 128, frameHeight: 168, startFrame: 0, endFrame: 7});
         this.load.spritesheet('player_back', './assets/runnerBack.png', {frameWidth: 128, frameHeight: 168, startFrame: 0, endFrame: 7});
+        this.load.spritesheet('enemy2', './assets/enemyFloat.png', {frameWidth: 70, frameHeight: 60, startFrame: 0, endFrame: 5});
 
         //this.load.image('player', './assets/player.png');
         this.load.image('background', './assets/background_day.png');
         this.load.image('block', './assets/block.png');
-        this.load.image('enemy1', './assets/enemy1.png');
-        this.load.image('enemy2', './assets/enemy.png');
+        this.load.image('enemy', './assets/enemy.png');
     }
     create() {
         // Adding background and player
@@ -26,6 +26,12 @@ class Play extends Phaser.Scene {
         this.anims.create({
             key: 'run_back',
             frames: this.anims.generateFrameNumbers('player_back', {start: 0, end: 7, first: 0}),
+            frameRate: 12,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'enemy_float',
+            frames: this.anims.generateFrameNumbers('enemy2', {start: 0, end: 5, first: 0}),
             frameRate: 12,
             repeat: -1
         });
@@ -99,6 +105,8 @@ class Play extends Phaser.Scene {
         this.playerBack.anims.play("run_back");
         this.time.delayedCall(500, this.lookBack, [], this);
 
+        this.enemy2.anims.play('enemy_float');
+        
     }
     
     update() {
