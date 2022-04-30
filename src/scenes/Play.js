@@ -218,6 +218,7 @@ class Play extends Phaser.Scene {
         // reset enemy
         if (this.time.now > this.delay && this.delay != 0) {
             this.spawn(this.enemy2);
+            this.enemy2.flipX = false;
             this.enemy2.body.allowGravity = true;
             this.enemy2.y = game.config.height - 150;
             this.e2appear = true;
