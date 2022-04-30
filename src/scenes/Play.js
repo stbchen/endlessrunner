@@ -143,7 +143,10 @@ class Play extends Phaser.Scene {
                 this.jumps--;
                 this.jumping = false;
             }
-
+            if(Phaser.Input.Keyboard.DownDuration(cursors.down, 150)) {
+                this.player.body.velocity.y = -this.JUMP_VELOCITY; // Change this for fast fall speed
+                this.jumping = true;
+            }
             // if (this.checkCollision(this.player, this.enemy1)) {
             //     this.hit();
             //     this.health--;
@@ -151,7 +154,10 @@ class Play extends Phaser.Scene {
             // }
 
             // Enemy2 update
-            if(this.enemy2.x == 940) {
+            console.log(this.enemy2.x);
+            if(this.enemy2.x > 400) { // Change this for enemy2 boomerang distance
+                console.log("hi")
+                this.enemy2.flipX = true;
                 this.enemy2.body.setAccelerationX(-this.ACCELERATION/10);
                 this.enemy2.body.velocity.x -= 10;
                 // see: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.Animation.html#play__anchor
@@ -159,6 +165,7 @@ class Play extends Phaser.Scene {
             } else if(this.enemy2.x == 0) {
                 //this.enemy2.body.setAccelerationX(this.ACCELERATION/10);
                 this.enemy2.setVisible(false);
+                this.enemy2.flipX = false;
                 this.enemy2.body.velocity.x = 0;
                 this.enemy2.y = 50;
                 this.enemy2.x = 50;
