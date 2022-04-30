@@ -64,8 +64,8 @@ class Play extends Phaser.Scene {
         }
         
         // Adding physics player
-        this.player = this.physics.add.sprite(3 * game.config.width/4, game.config.height + 200, 'player').setScale(SCALE);
-        this.player.setCollideWorldBounds(true);
+        this.player = this.physics.add.sprite(3 * game.config.width/4, game.config.height -150, 'player').setScale(SCALE);
+        this.player.setCollideWorldBounds(false);
         this.player.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
         this.health = 3;
         this.iframe = 0;
@@ -79,6 +79,8 @@ class Play extends Phaser.Scene {
         this.enemy1.body.setAccelerationX(this.ACCELERATION/15);
         this.enemy1.body.setDragX(this.DRAG);
         this.enemy1.body.allowGravity = false;
+        this.despawn(this.enemy1);
+        this.delay1 = this.time.now + 3000;
 
         // Adding enemy2
         //this.enemy2 = this.physics.add.sprite(0, game.config.height + 200, 'enemy2', 0).setOrigin(0, 0);
@@ -218,6 +220,7 @@ class Play extends Phaser.Scene {
         // reset enemy
         if (this.time.now > this.delay && this.delay != 0) {
             this.spawn(this.enemy2);
+            this.enemy2.flipX = false;
             this.enemy2.body.allowGravity = true;
             this.enemy2.y = game.config.height - 150;
             this.e2appear = true;
