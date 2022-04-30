@@ -11,6 +11,7 @@ class Play extends Phaser.Scene {
         this.load.image('background', './assets/background_day.png');
         this.load.image('night_background', './assets/background_night.png');
         this.load.image('block', './assets/block.png');
+        this.load.image('train', './assets/train.png');
         this.load.image('enemy', './assets/enemy.png');
         this.load.image('enemy1', './assets/enemy1.png');
 
@@ -19,6 +20,9 @@ class Play extends Phaser.Scene {
         // Adding background and player
         this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0, 0);
         
+        // Add train
+        this.train = this.add.tileSprite(0, game.config.height - 75, game.config.width, 75, 'train').setOrigin(0, 0);
+
         //this.p1 = new Player(this, game.config.width/4, game.config.height - 140, 'player').setOrigin(0,0);
         this.anims.create({
             key: 'run_front',
@@ -69,16 +73,16 @@ class Play extends Phaser.Scene {
 
         // Adding enemy1
         //this.enemy1 = new Enemy1(this, game.config.width, game.config.height/2, 'enemy1', 0).setOrigin(0, 0);
-        this.enemy1 = this.physics.add.sprite(50, game.config.height/2, 'enemy1', 0).setOrigin(0, 0);
-        this.enemy1.setCollideWorldBounds(true);
-        this.enemy1.body.velocity.x += 10;
-        this.enemy1.body.setAccelerationX(this.ACCELERATION/10);
+        this.enemy1 = this.physics.add.sprite(50, game.config.height/2, 'enemy2', 0).setOrigin(0, 0);
+        this.enemy1.setCollideWorldBounds(false);
+        this.enemy1.body.velocity.x += 8;
+        this.enemy1.body.setAccelerationX(this.ACCELERATION/15);
         this.enemy1.body.setDragX(this.DRAG);
         this.enemy1.body.allowGravity = false;
 
         // Adding enemy2
         //this.enemy2 = this.physics.add.sprite(0, game.config.height + 200, 'enemy2', 0).setOrigin(0, 0);
-        this.enemy2 = this.physics.add.sprite(50, game.config.height + 200, 'enemy2', 0).setOrigin(0, 0);
+        this.enemy2 = this.physics.add.sprite(50, game.config.height - 150, 'enemy2', 0).setOrigin(0, 0);
         this.enemy2.setCollideWorldBounds(true);
         this.enemy2.body.velocity.x += 10;
         this.enemy2.body.setAccelerationX(this.ACCELERATION/10);
@@ -138,10 +142,11 @@ class Play extends Phaser.Scene {
     }
     
     update() {
-
-        // Score
-        this.score += 1;
-        this.scoreText.text = "Score: " + this.score;
+        // Check if game is not over
+        if (!this.gameOver) {
+            // Score
+            this.score += 1;
+            this.scoreText.text = "Score: " + this.score;
 
         // Day/night cycle
         if (this.score % 250 == 0) {
@@ -154,11 +159,9 @@ class Play extends Phaser.Scene {
             }
             this.night = !this.night;
         }
-        // Check if game is not over
-        if (!this.gameOver) {
             // Moving background
             this.background.tilePositionX += 10;
-
+            this.train.tilePositionX += 13;
             this.playerBack.setX(this.player.x);
             this.playerBack.setY(this.player.y);
 
@@ -192,7 +195,7 @@ class Play extends Phaser.Scene {
             }
 
             // Enemy2 update
-            if(this.enemy2.x > 400) { // Change this for enemy2 boomerang distance
+            if(this.enemy2.x > 800) { // CHANGE this for enemy2 boomerang distance
                 this.enemy2.flipX = true;
                 this.enemy2.body.setAccelerationX(-this.ACCELERATION/10);
                 this.enemy2.body.velocity.x -= 10;
@@ -202,29 +205,27 @@ class Play extends Phaser.Scene {
                 this.enemy2.flipX = false;
                 this.despawn(this.enemy2);
                 this.e2appear = false;
-                console.log("hii");
                 this.delay = this.time.now + Phaser.Math.Between(3000, 5000);
             }
 
             // enemy1 update
-            if (this.enemy1.x == 980) {
+            if (this.enemy1.x > 1100) {
                 this.despawn(this.enemy1);
                 this.e1appear = false;
                 this.delay1 = this.time.now + Phaser.Math.Between(3000, 5000);
             }
         }
-        console.log(this.time.now, this.delay);
         // reset enemy
         if (this.time.now > this.delay && this.delay != 0) {
             this.spawn(this.enemy2);
             this.enemy2.body.allowGravity = true;
-            this.enemy2.y = game.config.height + 200;
+            this.enemy2.y = game.config.height - 150;
             this.e2appear = true;
             this.delay = 0;
         }
-        //console.log(this.time.now, this.delay1);
+
+        this.enemy1.body.y = game.config.height/2;
         if (this.time.now > this.delay1 && this.delay1 != 0) {
-            console.log("hiii")
             this.spawn(this.enemy1);
             this.enemy1.y = game.config.height/2;
             this.enemy1.body.allowGravity = false;
