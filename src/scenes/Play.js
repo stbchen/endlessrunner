@@ -173,13 +173,12 @@ class Play extends Phaser.Scene {
                 this.e2appear = false;
                 this.delay = this.time.now + Phaser.Math.Between(3000, 5000);
             }
-
-
         }
 
         if (this.health <= 0) {
             this.gameOver = true;
             this.endtext = this.add.text(50, game.config.height/2, 'Game Over, press R to restart', { fontSize: '55px', fill: '#000' });
+        
         }
 
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
