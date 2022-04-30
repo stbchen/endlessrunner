@@ -7,9 +7,14 @@ class Play extends Phaser.Scene {
         this.load.spritesheet('player_back', './assets/runnerBack.png', {frameWidth: 128, frameHeight: 168, startFrame: 0, endFrame: 7});
         this.load.spritesheet('enemy2', './assets/enemyFloat.png', {frameWidth: 70, frameHeight: 60, startFrame: 0, endFrame: 5});
 
-        //this.load.image('player', './assets/player.png');
-        this.load.image('background', './assets/background_day.png');
-        this.load.image('night_background', './assets/background_night.png');
+        this.load.image('day_bg', './assets/day_background.png');
+        this.load.image('day_mg', './assets/day_midground.png');
+        this.load.image('day_fg', './assets/day_foreground.png');
+
+        this.load.image('night_bg', './assets/night_background.png');
+        this.load.image('night_mg', './assets/night_midground.png');
+        this.load.image('night_fg', './assets/night_foreground.png');
+
         this.load.image('block', './assets/block.png');
         this.load.image('train', './assets/train.png');
         this.load.image('enemy', './assets/enemy.png');
@@ -18,7 +23,9 @@ class Play extends Phaser.Scene {
     }
     create() {
         // Adding background and player
-        this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0, 0);
+        this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_bg').setOrigin(0, 0);
+        this.midground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_mg').setOrigin(0, 0);
+        this.foreground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_fg').setOrigin(0, 0);
         
         // Add train
         this.train = this.add.tileSprite(0, game.config.height - 75, game.config.width, 75, 'train').setOrigin(0, 0);
@@ -152,17 +159,23 @@ class Play extends Phaser.Scene {
 
         // Day/night cycle
         if (this.score % 250 == 0) {
-            if (this.night) {
-                this.background.setTexture('background');
-                this.scoreText.setColor("#000");
-            } else {
-                this.background.setTexture('night_background');
-                this.scoreText.setColor("#fff");
-            }
             this.night = !this.night;
+            if (this.night) {
+                this.background.setTexture('night_bg');
+                this.midground.setTexture('night_mg');
+                this.foreground.setTexture('night_fg');
+                this.scoreText.setColor("#FFF");
+            } else {
+                this.background.setTexture('day_bg');
+                this.midground.setTexture('day_mg');
+                this.foreground.setTexture('day_fg');
+                this.scoreText.setColor("#000");
+            }
         }
             // Moving background
-            this.background.tilePositionX += 10;
+            this.background.tilePositionX += 2;
+            this.midground.tilePositionX += 4;
+            this.foreground.tilePositionX += 6;
             this.train.tilePositionX += 13;
             this.playerBack.setX(this.player.x);
             this.playerBack.setY(this.player.y);
