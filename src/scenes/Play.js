@@ -154,9 +154,7 @@ class Play extends Phaser.Scene {
             // }
 
             // Enemy2 update
-            console.log(this.enemy2.x);
             if(this.enemy2.x > 400) { // Change this for enemy2 boomerang distance
-                console.log("hi")
                 this.enemy2.flipX = true;
                 this.enemy2.body.setAccelerationX(-this.ACCELERATION/10);
                 this.enemy2.body.velocity.x -= 10;
