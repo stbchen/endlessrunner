@@ -9,13 +9,20 @@ class Play extends Phaser.Scene {
 
         //this.load.image('player', './assets/player.png');
         this.load.image('background', './assets/background_day.png');
+        this.load.image('night_background', './assets/background_night.png');
         this.load.image('block', './assets/block.png');
+        this.load.image('train', './assets/train.png');
         this.load.image('enemy', './assets/enemy.png');
+        this.load.image('enemy1', './assets/enemy1.png');
+
     }
     create() {
         // Adding background and player
         this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0, 0);
         
+        // Add train
+        this.train = this.add.tileSprite(0, game.config.height - 75, game.config.width, 75, 'train').setOrigin(0, 0);
+
         //this.p1 = new Player(this, game.config.width/4, game.config.height - 140, 'player').setOrigin(0,0);
         this.anims.create({
             key: 'run_front',
@@ -62,13 +69,20 @@ class Play extends Phaser.Scene {
         this.player.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
         this.health = 3;
         this.iframe = 0;
+        this.night = false;
 
         // Adding enemy1
         //this.enemy1 = new Enemy1(this, game.config.width, game.config.height/2, 'enemy1', 0).setOrigin(0, 0);
-        
+        this.enemy1 = this.physics.add.sprite(50, game.config.height/2, 'enemy2', 0).setOrigin(0, 0);
+        this.enemy1.setCollideWorldBounds(false);
+        this.enemy1.body.velocity.x += 8;
+        this.enemy1.body.setAccelerationX(this.ACCELERATION/15);
+        this.enemy1.body.setDragX(this.DRAG);
+        this.enemy1.body.allowGravity = false;
+
         // Adding enemy2
         //this.enemy2 = this.physics.add.sprite(0, game.config.height + 200, 'enemy2', 0).setOrigin(0, 0);
-        this.enemy2 = this.physics.add.sprite(50, game.config.height + 200, 'enemy2', 0).setOrigin(0, 0);
+        this.enemy2 = this.physics.add.sprite(50, game.config.height - 150, 'enemy2', 0).setOrigin(0, 0);
         this.enemy2.setCollideWorldBounds(true);
         this.enemy2.body.velocity.x += 10;
         this.enemy2.body.setAccelerationX(this.ACCELERATION/10);
@@ -86,19 +100,37 @@ class Play extends Phaser.Scene {
         this.physics.add.collider(this.player, this.enemy2,() => {
             if (this.time.now > this.iframe) {
                 this.hit();
-                this.despawn();
+                this.despawn(this.enemy2);
+                this.delay = this.time.now + Phaser.Math.Between(3000, 5000);
                 // SET IFRAMES (in seconds)
                 this.iframe = this.time.now + 10000;
                 this.player.body.velocity.x = 0;
             } else {
-                this.despawn();
+                this.despawn(this.enemy2);
+                this.delay = this.time.now + Phaser.Math.Between(3000, 5000);
                 this.player.body.velocity.x = 0;
             }
         });
-    
+        this.physics.add.collider(this.player, this.enemy1,() => {
+            if (this.time.now > this.iframe) {
+                this.hit();
+                this.delay1 = this.time.now + Phaser.Math.Between(3000, 5000);
+                this.despawn(this.enemy1);
+                // SET IFRAMES (in seconds)
+                this.iframe = this.time.now + 10000;
+                this.player.body.velocity.x = 0;
+            } else {
+                this.despawn(this.enemy1);
+                this.delay1 = this.time.now + Phaser.Math.Between(3000, 5000);
+                this.player.body.velocity.x = 0;
+            }
+        });
         // Setting game over to false
         this.gameOver = false;
         this.e2appear = true;
+        this.e1appear = true;
+        this.score = 0;
+        this.scoreText = this.add.text(16, 16, 'Score: ' + this.score, { fontSize: '32px', fill: '#000' });
         // Play animations
         this.player.anims.play("run_front");
         this.playerBack = this.add.sprite(this.player.x, this.player.y, 'player_back').setScale(SCALE).setVisible(false);
@@ -110,12 +142,26 @@ class Play extends Phaser.Scene {
     }
     
     update() {
-
         // Check if game is not over
         if (!this.gameOver) {
-            // Moving background
-            this.background.tilePositionX += 4;
+            // Score
+            this.score += 1;
+            this.scoreText.text = "Score: " + this.score;
 
+        // Day/night cycle
+        if (this.score % 250 == 0) {
+            if (this.night) {
+                this.background.setTexture('background');
+                this.scoreText.setColor("#000");
+            } else {
+                this.background.setTexture('night_background');
+                this.scoreText.setColor("#fff");
+            }
+            this.night = !this.night;
+        }
+            // Moving background
+            this.background.tilePositionX += 10;
+            this.train.tilePositionX += 13;
             this.playerBack.setX(this.player.x);
             this.playerBack.setY(this.player.y);
 
@@ -147,32 +193,44 @@ class Play extends Phaser.Scene {
                 this.player.body.velocity.y = -this.JUMP_VELOCITY; // Change this for fast fall speed
                 this.jumping = true;
             }
-            // if (this.checkCollision(this.player, this.enemy1)) {
-            //     this.hit();
-            //     this.health--;
-            //     this.enemy1.reset();
-            // }
 
             // Enemy2 update
-            if(this.enemy2.x > 400) { // Change this for enemy2 boomerang distance
+            if(this.enemy2.x > 800) { // CHANGE this for enemy2 boomerang distance
                 this.enemy2.flipX = true;
                 this.enemy2.body.setAccelerationX(-this.ACCELERATION/10);
                 this.enemy2.body.velocity.x -= 10;
                 // see: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.Animation.html#play__anchor
                 // play(key [, ignoreIfPlaying] [, startFrame])
             } else if(this.enemy2.x == 0) {
-                //this.enemy2.body.setAccelerationX(this.ACCELERATION/10);
-                this.enemy2.setVisible(false);
                 this.enemy2.flipX = false;
-                this.enemy2.body.velocity.x = 0;
-                this.enemy2.y = 50;
-                this.enemy2.x = 50;
-                this.enemy2.body.setAccelerationX(0);
-                this.enemy2.body.immovable = true;
-                this.enemy2.body.allowGravity = false;
+                this.despawn(this.enemy2);
                 this.e2appear = false;
                 this.delay = this.time.now + Phaser.Math.Between(3000, 5000);
             }
+
+            // enemy1 update
+            if (this.enemy1.x > 1100) {
+                this.despawn(this.enemy1);
+                this.e1appear = false;
+                this.delay1 = this.time.now + Phaser.Math.Between(3000, 5000);
+            }
+        }
+        // reset enemy
+        if (this.time.now > this.delay && this.delay != 0) {
+            this.spawn(this.enemy2);
+            this.enemy2.body.allowGravity = true;
+            this.enemy2.y = game.config.height - 150;
+            this.e2appear = true;
+            this.delay = 0;
+        }
+
+        this.enemy1.body.y = game.config.height/2;
+        if (this.time.now > this.delay1 && this.delay1 != 0) {
+            this.spawn(this.enemy1);
+            this.enemy1.y = game.config.height/2;
+            this.enemy1.body.allowGravity = false;
+            this.e1appear = true;
+            this.delay1 = 0;
         }
 
         if (this.health <= 0) {
@@ -184,34 +242,25 @@ class Play extends Phaser.Scene {
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
         }
-
-        // console.log(this.time.now, this.delay);
-        // reset enemy
-        if (this.time.now > this.delay && this.delay != 0) {
-            this.enemy2.setVisible(true);
-            this.enemy2.body.immovable = false;
-            this.enemy2.body.allowGravity = true;
-            this.e2appear = true;
-            this.enemy2.x = 50;
-            this.enemy2.y = game.config.height + 200;
-            this.delay = 0;
-            this.enemy2.body.velocity.x += 10;
-            this.enemy2.body.setAccelerationX(this.ACCELERATION/10);
-            this.enemy2.body.setDragX(this.DRAG);
-        }
-
     }
 
-    despawn() {
-        this.enemy2.setVisible(false);
-        this.enemy2.body.velocity.x = 0;
-        this.enemy2.y = 50;
-        this.enemy2.x = 50;
-        this.enemy2.body.setAccelerationX(0);
-        this.enemy2.body.immovable = true;
-        this.enemy2.body.allowGravity = false;
-        this.e2appear = false;
-        this.delay = this.time.now + Phaser.Math.Between(3000, 5000);
+    despawn(enemy) {
+        enemy.setVisible(false);
+        enemy.body.velocity.x = 0;
+        enemy.y = 50;
+        enemy.x = 50;
+        enemy.body.setAccelerationX(0);
+        enemy.body.immovable = true;
+        enemy.body.allowGravity = false;
+    }
+
+    spawn(enemy) {
+        enemy.setVisible(true);
+        enemy.body.immovable = false;
+        enemy.x = 50;
+        enemy.body.velocity.x += 10;
+        enemy.body.setAccelerationX(this.ACCELERATION/10);
+        enemy.body.setDragX(this.DRAG);
     }
     hit() {
         if (this.counter < 20) {
@@ -257,3 +306,15 @@ class Play extends Phaser.Scene {
 //     this.player.body.setAccelerationX(0);
 //     this.player.body.setDragX(this.DRAG);
 // }
+
+//this.enemy2.body.setAccelerationX(this.ACCELERATION/10);
+// this.enemy2.setVisible(false);
+// this.enemy2.flipX = false;
+// this.enemy2.body.velocity.x = 0;
+// this.enemy2.y = 50;
+// this.enemy2.x = 50;
+// this.enemy2.body.setAccelerationX(0);
+// this.enemy2.body.immovable = true;
+// this.enemy2.body.allowGravity = false;
+// this.e2appear = false;
+// this.delay = this.time.now + Phaser.Math.Between(3000, 5000);

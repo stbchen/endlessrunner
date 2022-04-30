@@ -23,6 +23,6 @@ let config = {
 
 let cursors, keyR;
 const SCALE = 0.9;
-const tileSize = 40;
+const tileSize = 75;
 
 let game = new Phaser.Game(config);
