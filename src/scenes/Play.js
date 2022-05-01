@@ -265,7 +265,7 @@ class Play extends Phaser.Scene {
         if (this.time.now > this.delay1 && this.delay1 != 0) {
             this.spawn(this.enemy1);
             this.enemy1.y = game.config.height/2;
-            this.enemy1.body.y = getRandomInt(0,300);
+            this.enemy1.body.y = getRandomInt(0,300); //change what range enemy1 will spawn in
             this.time.now + 6000;
             this.enemy1.body.allowGravity = false;
             this.e1appear = true;
