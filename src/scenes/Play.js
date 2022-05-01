@@ -234,14 +234,14 @@ class Play extends Phaser.Scene {
                 this.enemy2.flipX = false;
                 this.despawn(this.enemy2);
                 this.e2appear = false;
-                this.delay = this.time.now + Phaser.Math.Between(3000, 5000);
+                this.delay = this.time.now + Phaser.Math.Between(2000, 4000);
             }
 
             // enemy1 update
             if (this.enemy1.x > 1100) {
                 this.despawn(this.enemy1);
                 this.e1appear = false;
-                this.delay1 = this.time.now + Phaser.Math.Between(3000, 5000);
+                this.delay1 = this.time.now + Phaser.Math.Between(0, 1000);
             }
         }
         // reset enemy
@@ -253,14 +253,27 @@ class Play extends Phaser.Scene {
             this.e2appear = true;
             this.delay = 0;
         }
-
-        this.enemy1.body.y = game.config.height/2;
+        
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        
+        
         if (this.time.now > this.delay1 && this.delay1 != 0) {
             this.spawn(this.enemy1);
             this.enemy1.y = game.config.height/2;
+            this.enemy1.body.y = getRandomInt(0,300);
+            this.time.now + 6000;
             this.enemy1.body.allowGravity = false;
             this.e1appear = true;
             this.delay1 = 0;
+        }
+
+        if (this.e1appear = true){
+            
         }
 
         if (this.health <= 0) {
