@@ -5,7 +5,7 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.spritesheet('player', './assets/runnerFront.png', {frameWidth: 128, frameHeight: 168, startFrame: 0, endFrame: 7});
         this.load.spritesheet('player_back', './assets/runnerBack.png', {frameWidth: 128, frameHeight: 168, startFrame: 0, endFrame: 7});
-        this.load.spritesheet('enemy2', './assets/enemyFloat.png', {frameWidth: 70, frameHeight: 60, startFrame: 0, endFrame: 5});
+        this.load.spritesheet('enemy', './assets/enemyFloat.png', {frameWidth: 70, frameHeight: 60, startFrame: 0, endFrame: 5});
 
         this.load.image('day_bg', './assets/day_background.png');
         this.load.image('day_mg', './assets/day_midground.png');
@@ -17,15 +17,17 @@ class Play extends Phaser.Scene {
 
         this.load.image('block', './assets/block.png');
         this.load.image('train', './assets/train.png');
-        this.load.image('enemy', './assets/enemy.png');
-        this.load.image('enemy1', './assets/enemy1.png');
 
     }
     create() {
         // Adding background and player
-        this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_bg').setOrigin(0, 0);
-        this.midground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_mg').setOrigin(0, 0);
-        this.foreground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_fg').setOrigin(0, 0);
+        this.nightBackground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'night_bg').setOrigin(0, 0);
+        this.nightMidground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'night_mg').setOrigin(0, 0);
+        this.nightForeground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'night_fg').setOrigin(0, 0);
+
+        this.dayBackground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_bg').setOrigin(0, 0);
+        this.dayMidground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_mg').setOrigin(0, 0);
+        this.dayForeground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_fg').setOrigin(0, 0);
         
         // Add train
         this.train = this.add.tileSprite(0, game.config.height - 75, game.config.width, 75, 'train').setOrigin(0, 0);
@@ -45,7 +47,7 @@ class Play extends Phaser.Scene {
         });
         this.anims.create({
             key: 'enemy_float',
-            frames: this.anims.generateFrameNumbers('enemy2', {start: 0, end: 5, first: 0}),
+            frames: this.anims.generateFrameNumbers('enemy', {start: 0, end: 5, first: 0}),
             frameRate: 12,
             repeat: -1
         });
@@ -80,7 +82,7 @@ class Play extends Phaser.Scene {
 
         // Adding enemy1
         //this.enemy1 = new Enemy1(this, game.config.width, game.config.height/2, 'enemy1', 0).setOrigin(0, 0);
-        this.enemy1 = this.physics.add.sprite(50, game.config.height/2, 'enemy2', 0).setOrigin(0, 0);
+        this.enemy1 = this.physics.add.sprite(50, game.config.height/2, 'enemy', 0).setOrigin(0, 0);
         this.enemy1.setCollideWorldBounds(false);
         this.enemy1.body.velocity.x += 8;
         this.enemy1.body.setAccelerationX(this.ACCELERATION/15);
@@ -90,8 +92,7 @@ class Play extends Phaser.Scene {
         this.delay1 = this.time.now + 3000;
 
         // Adding enemy2
-        //this.enemy2 = this.physics.add.sprite(0, game.config.height + 200, 'enemy2', 0).setOrigin(0, 0);
-        this.enemy2 = this.physics.add.sprite(50, game.config.height - 150, 'enemy2', 0).setOrigin(0, 0);
+        this.enemy2 = this.physics.add.sprite(50, game.config.height - 150, 'enemy', 0).setOrigin(0, 0);
         this.enemy2.setCollideWorldBounds(true);
         this.enemy2.body.velocity.x += 10;
         this.enemy2.body.setAccelerationX(this.ACCELERATION/10);
@@ -158,25 +159,38 @@ class Play extends Phaser.Scene {
             this.scoreText.text = "Score: " + this.score;
 
         // Day/night cycle
-        if (this.score % 250 == 0) {
+        if (this.score % Phaser.Math.Between(1000, 1500) == 0) {
             this.night = !this.night;
             if (this.night) {
-                this.background.setTexture('night_bg');
-                this.midground.setTexture('night_mg');
-                this.foreground.setTexture('night_fg');
+                this.tweens.add({
+                    targets: [this.dayBackground, this.dayMidground, this.dayForeground],
+                    alpha: 0,
+                    duration: 5000,
+                    ease: 'Power1'
+                })
                 this.scoreText.setColor("#FFF");
             } else {
-                this.background.setTexture('day_bg');
-                this.midground.setTexture('day_mg');
-                this.foreground.setTexture('day_fg');
+                this.tweens.add({
+                    targets: [this.dayBackground, this.dayMidground, this.dayForeground],
+                    alpha: 1,
+                    duration: 5000,
+                    ease: 'Power1'
+                })
                 this.scoreText.setColor("#000");
             }
         }
             // Moving background
-            this.background.tilePositionX += 2;
-            this.midground.tilePositionX += 4;
-            this.foreground.tilePositionX += 6;
+            this.dayBackground.tilePositionX += 2;
+            this.nightBackground.tilePositionX += 2;
+
+            this.dayMidground.tilePositionX += 4;
+            this.nightMidground.tilePositionX += 4;
+
+            this.dayForeground.tilePositionX += 6;
+            this.nightForeground.tilePositionX += 6;
+
             this.train.tilePositionX += 13;
+
             this.playerBack.setX(this.player.x);
             this.playerBack.setY(this.player.y);
 
