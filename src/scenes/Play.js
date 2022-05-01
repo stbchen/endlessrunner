@@ -113,7 +113,7 @@ class Play extends Phaser.Scene {
                 this.despawn(this.enemy2);
                 this.delay = this.time.now + Phaser.Math.Between(3000, 5000);
                 // SET IFRAMES (in seconds)
-                this.iframe = this.time.now + 10000;
+                this.iframe = this.time.now + 2000;
                 this.player.body.velocity.x = 0;
             } else {
                 this.despawn(this.enemy2);
@@ -127,7 +127,7 @@ class Play extends Phaser.Scene {
                 this.delay1 = this.time.now + Phaser.Math.Between(3000, 5000);
                 this.despawn(this.enemy1);
                 // SET IFRAMES (in seconds)
-                this.iframe = this.time.now + 10000;
+                this.iframe = this.time.now + 2000;
                 this.player.body.velocity.x = 0;
             } else {
                 this.despawn(this.enemy1);
@@ -159,7 +159,7 @@ class Play extends Phaser.Scene {
             this.scoreText.text = "Score: " + this.score;
 
         // Day/night cycle
-        if (this.score % Phaser.Math.Between(1000, 1500) == 0) {
+        if (this.score % 1500 == 0) {
             this.night = !this.night;
             if (this.night) {
                 this.tweens.add({
@@ -234,14 +234,14 @@ class Play extends Phaser.Scene {
                 this.enemy2.flipX = false;
                 this.despawn(this.enemy2);
                 this.e2appear = false;
-                this.delay = this.time.now + Phaser.Math.Between(2000, 4000);
+                this.delay = this.time.now + Phaser.Math.Between(500, 2500);
             }
 
             // enemy1 update
             if (this.enemy1.x > 1100) {
                 this.despawn(this.enemy1);
                 this.e1appear = false;
-                this.delay1 = this.time.now + Phaser.Math.Between(0, 1000);
+                this.delay1 = this.time.now + Phaser.Math.Between(0, 500);
             }
         }
         // reset enemy
