@@ -298,6 +298,7 @@ class Play extends Phaser.Scene {
     spawn(enemy) {
         enemy.setVisible(true);
         this.enemy.body.y = getRandomInt(20,300); //change what range enemy will spawn in
+        //this.time.now + 6000;
         enemy.body.immovable = false;
         enemy.x = 50;
         enemy.body.velocity.x += 10;
