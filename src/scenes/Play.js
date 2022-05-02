@@ -249,7 +249,7 @@ class Play extends Phaser.Scene {
             this.spawn(this.enemy2);
             this.enemy2.flipX = false;
             this.enemy2.body.allowGravity = true;
-            this.enemy2.y = game.config.height - 150;
+            //this.enemy2.y = game.config.height - 150;
             this.e2appear = true;
             this.delay = 0;
         }
@@ -258,7 +258,7 @@ class Play extends Phaser.Scene {
         
         if (this.time.now > this.delay1 && this.delay1 != 0) {
             this.spawn(this.enemy1);
-            this.enemy1.y = game.config.height/2;
+            //this.enemy1.y = game.config.height/2;
             this.enemy1.body.allowGravity = false;
             this.e1appear = true;
             this.delay1 = 0;
@@ -289,18 +289,12 @@ class Play extends Phaser.Scene {
         enemy.body.allowGravity = false;
     }
 
-    getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
     spawn(enemy) {
         enemy.setVisible(true);
-        enemy.body.y = v.getRandomInt(20,300); //change what range enemy will spawn in
+        enemy.y = Phaser.Math.Between(300,500); //change what range enemy will spawn in
         //this.time.now + 6000;
         enemy.body.immovable = false;
-        enemy.x = 50;
+        enemy.x = 1;
         enemy.body.velocity.x += 10;
         enemy.body.setAccelerationX(this.ACCELERATION/10);
         enemy.body.setDragX(this.DRAG);
