@@ -253,13 +253,7 @@ class Play extends Phaser.Scene {
             this.e2appear = true;
             this.delay = 0;
         }
-        
-        function getRandomInt(min, max) {
-            min = Math.ceil(min);
-            max = Math.floor(max);
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
-        
+              
         
         
         if (this.time.now > this.delay1 && this.delay1 != 0) {
@@ -293,6 +287,12 @@ class Play extends Phaser.Scene {
         enemy.body.setAccelerationX(0);
         enemy.body.immovable = true;
         enemy.body.allowGravity = false;
+    }
+
+    getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     spawn(enemy) {
