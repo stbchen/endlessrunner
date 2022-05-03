@@ -3,6 +3,8 @@ class Play extends Phaser.Scene {
         super("playScene");
     }
     preload() {
+        this.load.atlas('player_sprite', './assets/player_atlas.png', './assets/player_atlas.json');
+
         this.load.spritesheet('player', './assets/runnerFront.png', {frameWidth: 128, frameHeight: 168, startFrame: 0, endFrame: 7});
         this.load.spritesheet('player_back', './assets/runnerBack.png', {frameWidth: 128, frameHeight: 168, startFrame: 0, endFrame: 7});
         this.load.spritesheet('enemy', './assets/enemyFloat.png', {frameWidth: 70, frameHeight: 60, startFrame: 0, endFrame: 5});
@@ -33,18 +35,18 @@ class Play extends Phaser.Scene {
         this.train = this.add.tileSprite(0, game.config.height - 75, game.config.width, 75, 'train').setOrigin(0, 0);
 
         //this.p1 = new Player(this, game.config.width/4, game.config.height - 140, 'player').setOrigin(0,0);
-        this.anims.create({
-            key: 'run_front',
-            frames: this.anims.generateFrameNumbers('player', {start: 0, end: 7, first: 0}),
-            frameRate: 12,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'run_back',
-            frames: this.anims.generateFrameNumbers('player_back', {start: 0, end: 7, first: 0}),
-            frameRate: 12,
-            repeat: -1
-        });
+        // this.anims.create({
+        //     key: 'run_front',
+        //     frames: this.anims.generateFrameNumbers('player', {start: 0, end: 7, first: 0}),
+        //     frameRate: 12,
+        //     repeat: -1
+        // });
+        // this.anims.create({
+        //     key: 'run_back',
+        //     frames: this.anims.generateFrameNumbers('player_back', {start: 0, end: 7, first: 0}),
+        //     frameRate: 12,
+        //     repeat: -1
+        // });
         this.anims.create({
             key: 'enemy_float',
             frames: this.anims.generateFrameNumbers('enemy', {start: 0, end: 5, first: 0}),
@@ -73,11 +75,83 @@ class Play extends Phaser.Scene {
         }
         
         // Adding physics player
-        this.player = this.physics.add.sprite(3 * game.config.width/4, game.config.height -150, 'player').setScale(SCALE);
+        this.player = this.physics.add.sprite(3 * game.config.width/4, game.config.height -150, 'player_sprite').setScale(SCALE);
+
+        this.anims.create({
+            key: 'runFront',
+            frames: this.anims.generateFrameNames('player_sprite', {
+                prefix: 'runFront',
+                start: 0,
+                end: 7,
+                zeroPad: 1
+            }),
+            frameRate: 12,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'runBack',
+            frames: this.anims.generateFrameNames('player_sprite', {
+                prefix: 'runBack',
+                start: 0,
+                end: 7,
+                zeroPad: 1
+            }),
+            frameRate: 12,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'damage',
+            frames: this.anims.generateFrameNames('player_sprite', {
+                prefix: 'damage',
+                start: 0,
+                end: 4,
+                zeroPad: 1
+            }),
+            frameRate: 12,
+            repeat: 0
+        });
+        this.anims.create({
+            key: 'jump',
+            frames: this.anims.generateFrameNames('player_sprite', {
+                prefix: 'jump',
+                start: 0,
+                end: 4,
+                zeroPad: 1
+            }),
+            frameRate: 12,
+            repeat: 0
+        });
+        this.anims.create({
+            key: 'fall',
+            frames: this.anims.generateFrameNames('player_sprite', {
+                prefix: 'fall',
+                start: 0,
+                end: 1,
+                zeroPad: 1
+            }),
+            frameRate: 12,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'land',
+            frames: this.anims.generateFrameNames('player_sprite', {
+                prefix: 'land',
+                start: 0,
+                end: 4,
+                zeroPad: 1
+            }),
+            frameRate: 12,
+            repeat: 0
+        });
+
+        this.player.play('runFront');
+
+
         this.player.setCollideWorldBounds(false);
         this.player.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
-        this.health = 3;
+        this.health = 5;
         this.iframe = 0;
+        this.lastAnim;
         this.night = false;
 
         // Adding enemy1
@@ -141,10 +215,8 @@ class Play extends Phaser.Scene {
         this.e1appear = true;
         this.score = 0;
         this.scoreText = this.add.text(16, 16, 'Score: ' + this.score, { fontSize: '32px', fill: '#000' });
+
         // Play animations
-        this.player.anims.play("run_front");
-        this.playerBack = this.add.sprite(this.player.x, this.player.y, 'player_back').setScale(SCALE).setVisible(false);
-        this.playerBack.anims.play("run_back");
         this.time.delayedCall(500, this.lookBack, [], this);
 
         this.enemy2.anims.play('enemy_float');
@@ -191,26 +263,27 @@ class Play extends Phaser.Scene {
 
             this.train.tilePositionX += 13;
 
-            this.playerBack.setX(this.player.x);
-            this.playerBack.setY(this.player.y);
-
             //this.enemy1.update();
-            
-            // check if player is grounded
+;            // check if player is grounded
             this.player.isGrounded = this.player.body.touching.down;
             // if so, we have jumps to spare 
-            if(this.player.isGrounded) {
+            if(this.player.isGrounded && !this.player.body.wasTouching.down) {
+                console.log("landed")
+                this.player.play('land');
+                this.player.on('animationcomplete', () => {
+                    this.player.play('runFront');
+                });
                 this.jumps = this.MAX_JUMPS;
                 this.jumping = false;
             } else {
-                // JUMP ANIMATION
-                // this.player.anims.play('jump');
+                if(this.player.body.velocity.y > 0) {
+                    this.player.play('fall');
+                }
             }
             // allow steady velocity change up to a certain key down duration
             // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.DownDuration__anchor
             if(this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
-                this.player.body.velocity.y = this.JUMP_VELOCITY;
-                this.jumping = true;
+                this.jump();
             }
             // finally, letting go of the UP key subtracts a jump
             // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.UpDuration__anchor
@@ -299,16 +372,28 @@ class Play extends Phaser.Scene {
         enemy.body.setAccelerationX(this.ACCELERATION/10);
         enemy.body.setDragX(this.DRAG);
     }
+    
     hit() {
+        if (this.counter === 0) {
+            this.lastAnim = this.player.anims.currentAnim.key;
+            this.player.play('damage');
+        }
         if (this.counter < 20) {
             this.player.x -= 5;
             this.counter++;    
         } else {
+            this.player.play(this.lastAnim);
             this.counter = 0;
             this.health--;
             return;
         }
         this.time.delayedCall(1, this.hit, [], this);
+    }
+
+    jump() {
+        this.player.body.velocity.y = this.JUMP_VELOCITY;
+        this.jumping = true;
+        this.player.play('jump');
     }
 
     moveBack() {
@@ -317,41 +402,18 @@ class Play extends Phaser.Scene {
     }
 
     lookBack() {
+        let currFrame = this.player.anims.currentFrame.index - 1;
         let lookingBack = Phaser.Math.Between(0, 2);    // random chance that the player sprite is looking back (probability is 1/max+1)
 
         if (lookingBack === 0) {
-            this.playerBack.setVisible(true);
-            this.player.setVisible(false);
+            if (this.player.anims.currentAnim.key === 'runFront') {
+                this.player.anims.play({key: 'runBack', startFrame: currFrame}, true);
+            }
         } else {
-            this.playerBack.setVisible(false);
-            this.player.setVisible(true);
+            if (this.player.anims.currentAnim.key === 'runBack') {
+                this.player.anims.play({key: 'runFront', startFrame: currFrame}, true);
+            }
         }
         this.time.delayedCall(500, this.lookBack, [], this);    // delayed recursive calls
     }
 }
-
-// if(cursors.left.isDown) {
-//     this.player.body.setAccelerationX(-this.ACCELERATION);
-//     this.player.setFlip(true, false);
-//     // see: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.Animation.html#play__anchor
-//     // play(key [, ignoreIfPlaying] [, startFrame])
-// } else if(cursors.right.isDown) {
-//     this.player.body.setAccelerationX(this.ACCELERATION);
-//     this.player.resetFlip();
-// } else {
-//     // set acceleration to 0 so DRAG will take over
-//     this.player.body.setAccelerationX(0);
-//     this.player.body.setDragX(this.DRAG);
-// }
-
-//this.enemy2.body.setAccelerationX(this.ACCELERATION/10);
-// this.enemy2.setVisible(false);
-// this.enemy2.flipX = false;
-// this.enemy2.body.velocity.x = 0;
-// this.enemy2.y = 50;
-// this.enemy2.x = 50;
-// this.enemy2.body.setAccelerationX(0);
-// this.enemy2.body.immovable = true;
-// this.enemy2.body.allowGravity = false;
-// this.e2appear = false;
-// this.delay = this.time.now + Phaser.Math.Between(3000, 5000);
