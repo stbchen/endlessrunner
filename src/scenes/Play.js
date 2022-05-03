@@ -75,7 +75,7 @@ class Play extends Phaser.Scene {
         }
         
         // Adding physics player
-        this.player = this.physics.add.sprite(3 * game.config.width/4, game.config.height -150, 'player_sprite').setScale(SCALE);
+        this.player = this.physics.add.sprite(3 * game.config.width/4, -150, 'player_sprite').setScale(SCALE);
 
         this.anims.create({
             key: 'runFront',
@@ -118,7 +118,7 @@ class Play extends Phaser.Scene {
                 end: 4,
                 zeroPad: 1
             }),
-            frameRate: 12,
+            frameRate: 36,
             repeat: 0
         });
         this.anims.create({
@@ -143,6 +143,17 @@ class Play extends Phaser.Scene {
             frameRate: 12,
             repeat: 0
         });
+        this.anims.create({
+            key: 'rise',
+            frames: this.anims.generateFrameNames('player_sprite', {
+                prefix: 'rise',
+                start: 0,
+                end: 1,
+                zeroPad: 1
+            }),
+            frameRate: 12,
+            repeat: -1
+        });
 
         this.player.play('runFront');
 
@@ -151,6 +162,7 @@ class Play extends Phaser.Scene {
         this.player.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
         this.health = 5;
         this.iframe = 0;
+        this.jumps = 0;
         this.lastAnim;
         this.night = false;
 
@@ -268,7 +280,6 @@ class Play extends Phaser.Scene {
             this.player.isGrounded = this.player.body.touching.down;
             // if so, we have jumps to spare 
             if(this.player.isGrounded && !this.player.body.wasTouching.down) {
-                console.log("landed")
                 this.player.play('land');
                 this.player.on('animationcomplete', () => {
                     this.player.play('runFront');
@@ -276,7 +287,8 @@ class Play extends Phaser.Scene {
                 this.jumps = this.MAX_JUMPS;
                 this.jumping = false;
             } else {
-                if(this.player.body.velocity.y > 0) {
+                if(this.player.body.velocity.y > 0 && this.player.body.prev.y > this.player.body.y) {
+                    console.log('falling');
                     this.player.play('fall');
                 }
             }
@@ -375,14 +387,14 @@ class Play extends Phaser.Scene {
     
     hit() {
         if (this.counter === 0) {
-            this.lastAnim = this.player.anims.currentAnim.key;
+            //this.lastAnim = this.player.anims.currentAnim.key;
             this.player.play('damage');
         }
         if (this.counter < 20) {
             this.player.x -= 5;
             this.counter++;    
         } else {
-            this.player.play(this.lastAnim);
+            this.player.play('runFront');
             this.counter = 0;
             this.health--;
             return;
@@ -394,6 +406,9 @@ class Play extends Phaser.Scene {
         this.player.body.velocity.y = this.JUMP_VELOCITY;
         this.jumping = true;
         this.player.play('jump');
+        this.player.on('animationcomplete', () => {
+            this.player.play('rise');
+        });
     }
 
     moveBack() {
