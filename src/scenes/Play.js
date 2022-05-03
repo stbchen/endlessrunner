@@ -367,6 +367,7 @@ class Play extends Phaser.Scene {
     despawn(enemy) {
         enemy.setVisible(false);
         enemy.body.velocity.x = 0;
+        enemy.body.velocity.y = 0;
         enemy.y = 50;
         enemy.x = 50;
         enemy.body.setAccelerationX(0);
