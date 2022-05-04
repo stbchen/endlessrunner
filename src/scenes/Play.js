@@ -16,7 +16,6 @@ class Play extends Phaser.Scene {
 
         this.load.image('block', './assets/block.png');
         this.load.image('train', './assets/train.png');
-
     }
     create() {
         this.myAudio = new Audio('./assets/music.mp3'); 
@@ -311,7 +310,6 @@ class Play extends Phaser.Scene {
             if(Phaser.Input.Keyboard.DownDuration(cursors.down, 150)) {
                 let fastfall = new Audio('./assets/fastfall.wav');
                 fastfall.play();// fastfall sfx here
-                console.log('play');
                 this.player.body.velocity.y = -this.JUMP_VELOCITY; // Change this for fast fall speed
                 this.jumping = true;
             }
@@ -363,8 +361,8 @@ class Play extends Phaser.Scene {
 
         if (this.health <= 0) {
             this.gameOver = true;
-            this.endtext = this.add.text(50, game.config.height/2, 'Game Over, press R to restart', { fontSize: '55px', fill: '#000' });
-            //this.scene.start("gameoverScene");
+            //this.endtext = this.add.text(50, game.config.height/2, 'Game Over, press R to restart', { fontSize: '55px', fill: '#000' });
+            this.scene.start("gameoverScene");
         }
 
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
@@ -435,7 +433,6 @@ class Play extends Phaser.Scene {
 
     moveBack() {
         this.player.x -= 1;
-        console.log("hi");
     }
 
     lookBack() {
