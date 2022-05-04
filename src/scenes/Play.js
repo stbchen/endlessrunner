@@ -227,6 +227,8 @@ class Play extends Phaser.Scene {
         this.e1appear = true;
         this.score = 0;
         this.scoreText = this.add.text(16, 16, 'Score: ' + this.score, { fontSize: '32px', fill: '#000' });
+        this.healthText = this.add.text(16, 50, 'Health: ' + this.health, { fontSize: '32px', fill: '#000' });
+        this.jumpText = this.add.text(16, 84, 'Jumps: ' + 3, { fontSize: '32px', fill: '#000' });
 
         // Play animations
         this.time.delayedCall(500, this.lookBack, [], this);
@@ -241,6 +243,7 @@ class Play extends Phaser.Scene {
             // Score
             this.score += 1;
             this.scoreText.text = "Score: " + this.score;
+            this.jumpText.text = "Jumps: " + this.jumps;
 
         // Day/night cycle
         if (this.score % 1500 == 0) {
@@ -398,6 +401,7 @@ class Play extends Phaser.Scene {
             this.player.play('runFront');
             this.counter = 0;
             this.health--;
+            this.healthText.text = "Health: " + this.health;
             return;
         }
         this.time.delayedCall(1, this.hit, [], this);
