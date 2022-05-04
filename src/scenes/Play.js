@@ -118,7 +118,7 @@ class Play extends Phaser.Scene {
                 end: 4,
                 zeroPad: 1
             }),
-            frameRate: 36,
+            frameRate: 12,
             repeat: 0
         });
         this.anims.create({
