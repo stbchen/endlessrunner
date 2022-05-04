@@ -34,19 +34,6 @@ class Play extends Phaser.Scene {
         // Add train
         this.train = this.add.tileSprite(0, game.config.height - 75, game.config.width, 75, 'train').setOrigin(0, 0);
 
-        //this.p1 = new Player(this, game.config.width/4, game.config.height - 140, 'player').setOrigin(0,0);
-        // this.anims.create({
-        //     key: 'run_front',
-        //     frames: this.anims.generateFrameNumbers('player', {start: 0, end: 7, first: 0}),
-        //     frameRate: 12,
-        //     repeat: -1
-        // });
-        // this.anims.create({
-        //     key: 'run_back',
-        //     frames: this.anims.generateFrameNumbers('player_back', {start: 0, end: 7, first: 0}),
-        //     frameRate: 12,
-        //     repeat: -1
-        // });
         this.anims.create({
             key: 'enemy_float',
             frames: this.anims.generateFrameNumbers('enemy', {start: 0, end: 5, first: 0}),
@@ -75,7 +62,7 @@ class Play extends Phaser.Scene {
         }
         
         // Adding physics player
-        this.player = this.physics.add.sprite(3 * game.config.width/4, -150, 'player_sprite').setScale(SCALE);
+        this.player = this.physics.add.sprite(3 * game.config.width/4, 550, 'player_sprite').setScale(SCALE);
 
         this.anims.create({
             key: 'runFront',
@@ -160,7 +147,7 @@ class Play extends Phaser.Scene {
 
         this.player.setCollideWorldBounds(false);
         this.player.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
-        this.health = 5;
+        this.health = 1;
         this.iframe = 0;
         this.jumps = 0;
         this.lastAnim;
@@ -355,8 +342,6 @@ class Play extends Phaser.Scene {
             this.e2appear = true;
             this.delay = 0;
         }
-              
-        
         
         if (this.time.now > this.delay1 && this.delay1 != 0) {
             this.spawn(this.enemy1);
@@ -368,8 +353,8 @@ class Play extends Phaser.Scene {
 
         if (this.health <= 0) {
             this.gameOver = true;
-            this.endtext = this.add.text(50, game.config.height/2, 'Game Over, press R to restart', { fontSize: '55px', fill: '#000' });
-        
+            //this.endtext = this.add.text(50, game.config.height/2, 'Game Over, press R to restart', { fontSize: '55px', fill: '#000' });
+            this.scene.start("gameoverScene");
         }
 
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {

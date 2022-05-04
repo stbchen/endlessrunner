@@ -1,4 +1,4 @@
-// Endless Runner: Running from the Alien Horde
+// Endless Runner: Outer Space Outlaw
 // Stanley, Nile, Ben
 // CMPM/ARTG 120
 
