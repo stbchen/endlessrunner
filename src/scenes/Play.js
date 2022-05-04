@@ -22,6 +22,19 @@ class Play extends Phaser.Scene {
 
     }
     create() {
+        this.myAudio = new Audio('./assets/music.mp3'); 
+        this.myAudio.pause();
+        if (typeof this.myAudio.loop == 'boolean'){
+            this.myAudio.loop = true;
+        }
+        else{
+            this.myAudio.addEventListener('ended', function() {
+                this.currentTime = 0;
+                this.play();
+            }, false);
+        }   
+        this.myAudio.play();
+
         // Adding background and player
         this.nightBackground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'night_bg').setOrigin(0, 0);
         this.nightMidground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'night_mg').setOrigin(0, 0);
