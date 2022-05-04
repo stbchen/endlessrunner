@@ -19,7 +19,6 @@ class Play extends Phaser.Scene {
 
         this.load.image('block', './assets/block.png');
         this.load.image('train', './assets/train.png');
-
     }
     create() {
         this.myAudio = new Audio('./assets/music.mp3'); 
@@ -366,8 +365,8 @@ class Play extends Phaser.Scene {
 
         if (this.health <= 0) {
             this.gameOver = true;
-            this.endtext = this.add.text(50, game.config.height/2, 'Game Over, press R to restart', { fontSize: '55px', fill: '#000' });
-            //this.scene.start("gameoverScene");
+            //this.endtext = this.add.text(50, game.config.height/2, 'Game Over, press R to restart', { fontSize: '55px', fill: '#000' });
+            this.scene.start("gameoverScene");
         }
 
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
