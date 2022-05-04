@@ -311,7 +311,8 @@ class Play extends Phaser.Scene {
                 this.jumping = false;
             }
             if(Phaser.Input.Keyboard.DownDuration(cursors.down, 150)) {
-                // fastfall sfx here
+                let fastfall = new Audio('./assets/fastfall.wav');
+                fastfall.play();// fastfall sfx here
                 this.player.body.velocity.y = -this.JUMP_VELOCITY; // Change this for fast fall speed
                 this.jumping = true;
             }
@@ -392,7 +393,8 @@ class Play extends Phaser.Scene {
     
     hit() {
         if (this.counter === 0) {
-            // hit sfx here
+            let hitsound = new Audio('./assets/hurt.wav');
+            hitsound.play();// hit sfx here
             this.tweens.add({
                 targets: [this.player],
                 alpha: 0.5,
@@ -418,7 +420,8 @@ class Play extends Phaser.Scene {
     }
 
     jump() {
-        // jump sfx here
+        let jumpsound = new Audio('./assets/jump.wav');
+        jumpsound.play();// jump sfx here
         this.player.body.velocity.y = this.JUMP_VELOCITY;
         this.jumping = true;
         this.player.play('jump');
