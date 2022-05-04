@@ -187,6 +187,7 @@ class Play extends Phaser.Scene {
         // Adding keyboard controls
         cursors = this.input.keyboard.createCursorKeys();
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+        keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
         // Adding collision with ground
         this.physics.add.collider(this.player, this.ground);
@@ -339,6 +340,12 @@ class Play extends Phaser.Scene {
                 this.delay1 = this.time.now + Phaser.Math.Between(0, 500);
             }
         }
+
+        // Go back to main menu
+         if (Phaser.Input.Keyboard.JustDown(keyESC)) {
+            this.scene.start('menuScene');
+         }
+
         // reset enemy
         if (this.time.now > this.delay && this.delay != 0) {
             this.spawn(this.enemy2);

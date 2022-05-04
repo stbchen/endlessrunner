@@ -21,7 +21,7 @@ let config = {
     scene: [Menu, Play],
 };
 
-let cursors, keyR;
+let cursors, keyR, keyESC;
 const SCALE = 0.9;
 const tileSize = 75;
 
