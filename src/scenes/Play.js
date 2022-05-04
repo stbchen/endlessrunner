@@ -4,9 +4,6 @@ class Play extends Phaser.Scene {
     }
     preload() {
         this.load.atlas('player_sprite', './assets/player_atlas.png', './assets/player_atlas.json');
-
-        this.load.spritesheet('player', './assets/runnerFront.png', {frameWidth: 128, frameHeight: 168, startFrame: 0, endFrame: 7});
-        this.load.spritesheet('player_back', './assets/runnerBack.png', {frameWidth: 128, frameHeight: 168, startFrame: 0, endFrame: 7});
         this.load.spritesheet('enemy', './assets/enemyFloat.png', {frameWidth: 70, frameHeight: 60, startFrame: 0, endFrame: 5});
 
         this.load.image('day_bg', './assets/day_background.png');
