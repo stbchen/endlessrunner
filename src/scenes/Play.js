@@ -313,6 +313,7 @@ class Play extends Phaser.Scene {
             if(Phaser.Input.Keyboard.DownDuration(cursors.down, 150)) {
                 let fastfall = new Audio('./assets/fastfall.wav');
                 fastfall.play();// fastfall sfx here
+                console.log('play');
                 this.player.body.velocity.y = -this.JUMP_VELOCITY; // Change this for fast fall speed
                 this.jumping = true;
             }
