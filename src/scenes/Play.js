@@ -391,7 +391,14 @@ class Play extends Phaser.Scene {
     
     hit() {
         if (this.counter === 0) {
-            //this.lastAnim = this.player.anims.currentAnim.key;
+            this.tweens.add({
+                targets: [this.player],
+                alpha: 0.5,
+                duration: 100,
+                repeat: 10,
+                yoyo: true,
+                ease: 'Power1'
+            });
             this.player.play('damage');
         }
         if (this.counter < 20) {
