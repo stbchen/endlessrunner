@@ -29,7 +29,7 @@ class Menu extends Phaser.Scene {
         this.enemy3 = this.add.image(0, 0, 'title_enemy3').setOrigin(0, 0);
         this.enemy2 = this.add.image(0, 0, 'title_enemy2').setOrigin(0, 0);
         this.enemy1 = this.add.image(0, 0, 'title_enemy1').setOrigin(0, 0);
-        this.logo = this.add.image(0, 0, 'title_logo').setOrigin(0, 0);
+        this.logo = this.add.image(8, 10, 'title_logo').setOrigin(0, 0);
         this.player = this.add.image(0, 0, 'title_player').setOrigin(0, 0);
         this.text = this.add.image(0, 0, 'title_text').setOrigin(0, 0);
 
@@ -43,7 +43,7 @@ class Menu extends Phaser.Scene {
         });
         this.tweens.add({
             targets: [this.enemy2],
-            y: this.enemy2.y - 35,
+            y: this.enemy2.y - 25,
             duration: 1300,
             repeat: -1,
             yoyo: true,
@@ -59,8 +59,8 @@ class Menu extends Phaser.Scene {
         });
         this.tweens.add({
             targets: [this.player],
-            y: this.player.y - 50,
-            duration: 2000,
+            y: this.player.y - 20,
+            duration: 1000,
             repeat: -1,
             yoyo: true,
             ease: 'Sinusoidal'

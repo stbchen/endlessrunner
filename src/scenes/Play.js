@@ -16,20 +16,18 @@ class Play extends Phaser.Scene {
 
         this.load.image('block', './assets/block.png');
         this.load.image('train', './assets/train.png');
+
+        this.load.audio('music', './assets/music.mp3');
+        this.load.audio('sfx_fastfall', './assets/fastfall.wav');
+        this.load.audio('sfx_jump', './assets/jump.wav');
+        this.load.audio('sfx_damage', './assets/hurt.wav');
     }
     create() {
-        this.myAudio = new Audio('./assets/music.mp3'); 
-        this.myAudio.pause();
-        if (typeof this.myAudio.loop == 'boolean'){
-            this.myAudio.loop = true;
-        }
-        else{
-            this.myAudio.addEventListener('ended', function() {
-                this.currentTime = 0;
-                this.play();
-            }, false);
-        }   
-        this.myAudio.play();
+        this.music = this.sound.add('music');
+        this.music.setLoop(true);
+        this.music.play();
+
+        this.jump_sfx = this.sound.add('sfx_jump');
 
         // Adding background and player
         this.nightBackground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'night_bg').setOrigin(0, 0);
@@ -104,7 +102,7 @@ class Play extends Phaser.Scene {
                 zeroPad: 1
             }),
             frameRate: 12,
-            repeat: 0
+            repeat: 1
         });
         this.anims.create({
             key: 'jump',
@@ -156,7 +154,7 @@ class Play extends Phaser.Scene {
 
         this.player.setCollideWorldBounds(false);
         this.player.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
-        this.health = 1;
+        this.health = 5;
         this.iframe = 0;
         this.jumps = 0;
         this.lastAnim;
@@ -298,7 +296,7 @@ class Play extends Phaser.Scene {
             }
             // allow steady velocity change up to a certain key down duration
             // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.DownDuration__anchor
-            if(this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
+            if(this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 150) /*&& !this.jumping*/) {
                 this.jump();
             }
             // finally, letting go of the UP key subtracts a jump
@@ -307,9 +305,8 @@ class Play extends Phaser.Scene {
                 this.jumps--;
                 this.jumping = false;
             }
-            if(Phaser.Input.Keyboard.DownDuration(cursors.down, 150)) {
-                let fastfall = new Audio('./assets/fastfall.wav');
-                fastfall.play();// fastfall sfx here
+            if(Phaser.Input.Keyboard.DownDuration(cursors.down, 150) && !this.player.isGrounded) {
+                this.sound.play('sfx_fastfall');
                 this.player.body.velocity.y = -this.JUMP_VELOCITY; // Change this for fast fall speed
                 this.jumping = true;
             }
@@ -360,7 +357,17 @@ class Play extends Phaser.Scene {
         }
 
         if (this.health === 0) {
-            this.scene.start("gameoverScene");
+            this.music.stop();
+            this.tweens.add({
+                targets: [this.player],
+                x: -200,
+                duration: 500,
+                repeat: 0,
+                ease: 'Power2'
+            });
+            this.time.delayedCall(1000, () => {
+                this.scene.start('gameoverScene');
+            })
         }
     }
 
@@ -388,8 +395,7 @@ class Play extends Phaser.Scene {
     
     hit() {
         if (this.counter === 0) {
-            let hitsound = new Audio('./assets/hurt.wav');
-            hitsound.play();// hit sfx here
+            this.sound.play('sfx_damage');
             this.tweens.add({
                 targets: [this.player],
                 alpha: 0.5,
@@ -398,7 +404,7 @@ class Play extends Phaser.Scene {
                 yoyo: true,
                 ease: 'Power1'
             });
-            this.player.play('damage');
+            this.player.anims.play('damage');
             this.health--;
             this.healthText.text = "Health: " + this.health;
         }
@@ -407,7 +413,7 @@ class Play extends Phaser.Scene {
             this.counter++;    
         } else {
             this.player.alpha = 1;
-            this.player.play('runFront');
+            this.player.anims.play('runFront');
             this.counter = 0;
             return;
         }
@@ -415,10 +421,11 @@ class Play extends Phaser.Scene {
     }
 
     jump() {
-        let jumpsound = new Audio('./assets/jump.wav');
-        jumpsound.play();// jump sfx here
-        this.player.body.velocity.y = this.JUMP_VELOCITY;
         this.jumping = true;
+        if (!this.jump_sfx.isPlaying) {
+            this.jump_sfx.play();
+        }
+        this.player.body.velocity.y = this.JUMP_VELOCITY;
         this.player.play('jump');
         this.player.on('animationcomplete', () => {
             this.player.play('rise');
