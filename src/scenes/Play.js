@@ -118,7 +118,7 @@ class Play extends Phaser.Scene {
                 end: 4,
                 zeroPad: 1
             }),
-            frameRate: 36,
+            frameRate: 12,
             repeat: 0
         });
         this.anims.create({
@@ -256,6 +256,8 @@ class Play extends Phaser.Scene {
                     ease: 'Power1'
                 })
                 this.scoreText.setColor("#FFF");
+                this.healthText.setColor("#FFF");
+                this.jumpText.setColor("#FFF");
             } else {
                 this.tweens.add({
                     targets: [this.dayBackground, this.dayMidground, this.dayForeground],
@@ -264,6 +266,8 @@ class Play extends Phaser.Scene {
                     ease: 'Power1'
                 })
                 this.scoreText.setColor("#000");
+                this.healthText.setColor("#000");
+                this.jumpText.setColor("#000");
             }
         }
             // Moving background
@@ -307,6 +311,7 @@ class Play extends Phaser.Scene {
                 this.jumping = false;
             }
             if(Phaser.Input.Keyboard.DownDuration(cursors.down, 150)) {
+                // fastfall sfx here
                 this.player.body.velocity.y = -this.JUMP_VELOCITY; // Change this for fast fall speed
                 this.jumping = true;
             }
@@ -352,10 +357,6 @@ class Play extends Phaser.Scene {
             this.delay1 = 0;
         }
 
-        if (this.e1appear = true){
-            
-        }
-
         if (this.health <= 0) {
             this.gameOver = true;
             this.endtext = this.add.text(50, game.config.height/2, 'Game Over, press R to restart', { fontSize: '55px', fill: '#000' });
@@ -391,6 +392,7 @@ class Play extends Phaser.Scene {
     
     hit() {
         if (this.counter === 0) {
+            // hit sfx here
             this.tweens.add({
                 targets: [this.player],
                 alpha: 0.5,
@@ -400,21 +402,23 @@ class Play extends Phaser.Scene {
                 ease: 'Power1'
             });
             this.player.play('damage');
+            this.health--;
+            this.healthText.text = "Health: " + this.health;
         }
         if (this.counter < 20) {
             this.player.x -= 5;
             this.counter++;    
         } else {
+            this.player.alpha = 1;
             this.player.play('runFront');
             this.counter = 0;
-            this.health--;
-            this.healthText.text = "Health: " + this.health;
             return;
         }
         this.time.delayedCall(1, this.hit, [], this);
     }
 
     jump() {
+        // jump sfx here
         this.player.body.velocity.y = this.JUMP_VELOCITY;
         this.jumping = true;
         this.player.play('jump');
