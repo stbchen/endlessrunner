@@ -259,6 +259,7 @@ class Play extends Phaser.Scene {
         this.e1appear = true;
         this.score = 0;
         this.scoreText = this.add.text(16, 16, 'Score: ' + this.score, { fontSize: '32px', fill: '#000' });
+        this.menuMsg = this.add.text(820, 16, 'Press escape \nto return to \nmain menu', { fontSize: '32px', fill: '#000' });
 
         // Play animations
         this.time.delayedCall(500, this.lookBack, [], this);
@@ -286,6 +287,8 @@ class Play extends Phaser.Scene {
                     ease: 'Power1'
                 })
                 this.scoreText.setColor("#FFF");
+                this.menuMsg.setColor("#FFF");
+
             } else {
                 this.tweens.add({
                     targets: [this.dayBackground, this.dayMidground, this.dayForeground],
@@ -294,6 +297,8 @@ class Play extends Phaser.Scene {
                     ease: 'Power1'
                 })
                 this.scoreText.setColor("#000");
+                this.menuMsg.setColor("#000");
+                
             }
         }
             // Moving background
