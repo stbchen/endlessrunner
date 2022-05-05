@@ -259,7 +259,7 @@ class Play extends Phaser.Scene {
         this.e1appear = true;
         this.score = 0;
         this.scoreText = this.add.text(16, 16, 'Score: ' + this.score, { fontSize: '32px', fill: '#000' });
-        this.menuMsg = this.add.text(870, 16, 'Press escape \nto return to \nmain menu', { fontSize: '24px', fill: '#000' });
+        this.menuMsg = this.add.text(890, 16, 'Press escape \nto return to \nmain menu', { fontSize: '24px', fill: '#000' });
 
         // Play animations
         this.time.delayedCall(500, this.lookBack, [], this);
