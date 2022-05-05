@@ -353,14 +353,14 @@ class Play extends Phaser.Scene {
                 this.enemy2.flipX = false;
                 this.despawn(this.enemy2);
                 this.e2appear = false;
-                this.delay = this.time.now + Phaser.Math.Between(500, 1000);
+                this.delay = this.time.now + Phaser.Math.Between(200, 500);
             }
 
             // enemy1 update
             if (this.enemy1.x > 1100) {
                 this.despawn(this.enemy1);
                 this.e1appear = false;
-                this.delay1 = this.time.now + Phaser.Math.Between(0, 500);
+                this.delay1 = this.time.now + Phaser.Math.Between(0, 250);
             }
         }
 
