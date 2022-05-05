@@ -16,6 +16,7 @@ class Menu extends Phaser.Scene {
         this.load.image('title_logo', './assets/title_logo.png');
         this.load.image('title_player', './assets/title_player.png');
         this.load.image('title_text', './assets/title_text.png');
+        this.load.image('credits', './assets/credits.png');
     }
     create() {
         this.inst = false;
@@ -25,6 +26,7 @@ class Menu extends Phaser.Scene {
         this.menu_bg = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_bg').setOrigin(0, 0);
         this.menu_mg = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_mg').setOrigin(0, 0);
         this.menu_fg = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_fg').setOrigin(0, 0);
+        this.credits = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'credits').setOrigin(0, 0);
 
         this.enemy3 = this.add.image(0, 0, 'title_enemy3').setOrigin(0, 0);
         this.enemy2 = this.add.image(0, 0, 'title_enemy2').setOrigin(0, 0);
