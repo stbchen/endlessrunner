@@ -246,11 +246,11 @@ class Play extends Phaser.Scene {
         this.enemy_background2.body.allowGravity = false;
         this.enemy_background2.anims.play('enemy_float');
 
-        this.enemy_background3 = this.physics.add.sprite(80, 450, 'enemy', 0).setOrigin(0, 0);
+        this.enemy_background3 = this.physics.add.sprite(120, 450, 'enemy', 0).setOrigin(0, 0);
         this.enemy_background3.body.allowGravity = false;
         this.enemy_background3.anims.play('enemy_float');
 
-        this.enemy_background4 = this.physics.add.sprite(60, 500, 'enemy', 0).setOrigin(0, 0);
+        this.enemy_background4 = this.physics.add.sprite(60, 520, 'enemy', 0).setOrigin(0, 0);
         this.enemy_background4.body.allowGravity = false;
         this.enemy_background4.anims.play('enemy_float');
 
@@ -274,7 +274,7 @@ class Play extends Phaser.Scene {
         this.enemy_background9.body.allowGravity = false;
         this.enemy_background9.anims.play('enemy_float');
 
-        this.enemy_background10 = this.physics.add.sprite(100, 350, 'enemy', 0).setOrigin(0, 0);
+        this.enemy_background10 = this.physics.add.sprite(100, 360, 'enemy', 0).setOrigin(0, 0);
         this.enemy_background10.body.allowGravity = false;
         this.enemy_background10.anims.play('enemy_float');
         
