@@ -5,6 +5,7 @@ class Play extends Phaser.Scene {
     preload() {
         this.load.atlas('player_sprite', './assets/player_atlas.png', './assets/player_atlas.json');
         this.load.spritesheet('enemy', './assets/enemyFloat.png', {frameWidth: 70, frameHeight: 60, startFrame: 0, endFrame: 5});
+        this.load.spritesheet('bg_enemy', './assets/bg_enemyFloat.png', {frameWidth: 70, frameHeight: 60, startFrame: 0, endFrame: 5});
 
         this.load.image('day_bg', './assets/day_background.png');
         this.load.image('day_mg', './assets/day_midground.png');
@@ -40,6 +41,26 @@ class Play extends Phaser.Scene {
         this.dayBackground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_bg').setOrigin(0, 0);
         this.dayMidground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_mg').setOrigin(0, 0);
         this.dayForeground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_fg').setOrigin(0, 0);
+
+        //adding background enemies
+        this.bg_enemies = this.add.group();
+        for (let i = 0; i < 25; i++) {
+            this.bg_enemies.add(this.add.sprite(Phaser.Math.Between(50, 500), Phaser.Math.Between(300, 500), 'bg_enemy').setScale(Phaser.Math.FloatBetween(0.5, 1)));
+        }
+
+        this.bg_enemies.getChildren().forEach((enemy) => {
+            enemy.anims.play('enemy_float');
+            enemy.setTintFill(0x000000);
+            this.tweens.add({
+                targets: [enemy],
+                x: enemy.x + Phaser.Math.Between(-100, 100),
+                y: enemy.y + Phaser.Math.Between(-100, 100),
+                duration: Phaser.Math.Between(1500, 2500),
+                repeat: -1,
+                yoyo: true,
+                ease: 'Sinusoidal'
+            });
+        })
 
         this.health_bar = this.add.rectangle(125, 65, 180, 60, 0xFF0044).setOrigin(0, 0);
         this.jump_bar = this.add.rectangle(125, 155, 180, 60, 0x3E8948).setOrigin(0, 0);
@@ -237,46 +258,46 @@ class Play extends Phaser.Scene {
 
         this.enemy2.anims.play('enemy_float');
 
-        //adding background enemies
-        this.enemy_background1 = this.physics.add.sprite(50, 300, 'enemy', 0).setOrigin(0, 0);
-        this.enemy_background1.body.allowGravity = false;
-        this.enemy_background1.anims.play('enemy_float');
 
-        this.enemy_background2 = this.physics.add.sprite(50, 400, 'enemy', 0).setOrigin(0, 0);
-        this.enemy_background2.body.allowGravity = false;
-        this.enemy_background2.anims.play('enemy_float');
+        // this.enemy_background1 = this.physics.add.sprite(50, 300, 'enemy', 0).setOrigin(0, 0);
+        // this.enemy_background1.body.allowGravity = false;
+        // this.enemy_background1.anims.play('enemy_float');
 
-        this.enemy_background3 = this.physics.add.sprite(120, 450, 'enemy', 0).setOrigin(0, 0);
-        this.enemy_background3.body.allowGravity = false;
-        this.enemy_background3.anims.play('enemy_float');
+        // this.enemy_background2 = this.physics.add.sprite(50, 400, 'enemy', 0).setOrigin(0, 0);
+        // this.enemy_background2.body.allowGravity = false;
+        // this.enemy_background2.anims.play('enemy_float');
 
-        this.enemy_background4 = this.physics.add.sprite(60, 520, 'enemy', 0).setOrigin(0, 0);
-        this.enemy_background4.body.allowGravity = false;
-        this.enemy_background4.anims.play('enemy_float');
+        // this.enemy_background3 = this.physics.add.sprite(120, 450, 'enemy', 0).setOrigin(0, 0);
+        // this.enemy_background3.body.allowGravity = false;
+        // this.enemy_background3.anims.play('enemy_float');
 
-        this.enemy_background5 = this.physics.add.sprite(1, 550, 'enemy', 0).setOrigin(0, 0);
-        this.enemy_background5.body.allowGravity = false;
-        this.enemy_background5.anims.play('enemy_float');
+        // this.enemy_background4 = this.physics.add.sprite(60, 520, 'enemy', 0).setOrigin(0, 0);
+        // this.enemy_background4.body.allowGravity = false;
+        // this.enemy_background4.anims.play('enemy_float');
 
-        this.enemy_background6 = this.physics.add.sprite(20, 450, 'enemy', 0).setOrigin(0, 0);
-        this.enemy_background6.body.allowGravity = false;
-        this.enemy_background6.anims.play('enemy_float');
+        // this.enemy_background5 = this.physics.add.sprite(1, 550, 'enemy', 0).setOrigin(0, 0);
+        // this.enemy_background5.body.allowGravity = false;
+        // this.enemy_background5.anims.play('enemy_float');
 
-        this.enemy_background7 = this.physics.add.sprite(20, 350, 'enemy', 0).setOrigin(0, 0);
-        this.enemy_background7.body.allowGravity = false;
-        this.enemy_background7.anims.play('enemy_float');
+        // this.enemy_background6 = this.physics.add.sprite(20, 450, 'enemy', 0).setOrigin(0, 0);
+        // this.enemy_background6.body.allowGravity = false;
+        // this.enemy_background6.anims.play('enemy_float');
+
+        // this.enemy_background7 = this.physics.add.sprite(20, 350, 'enemy', 0).setOrigin(0, 0);
+        // this.enemy_background7.body.allowGravity = false;
+        // this.enemy_background7.anims.play('enemy_float');
         
-        this.enemy_background8 = this.physics.add.sprite(10, 500, 'enemy', 0).setOrigin(0, 0);
-        this.enemy_background8.body.allowGravity = false;
-        this.enemy_background8.anims.play('enemy_float');
+        // this.enemy_background8 = this.physics.add.sprite(10, 500, 'enemy', 0).setOrigin(0, 0);
+        // this.enemy_background8.body.allowGravity = false;
+        // this.enemy_background8.anims.play('enemy_float');
 
-        this.enemy_background9 = this.physics.add.sprite(120, 550, 'enemy', 0).setOrigin(0, 0);
-        this.enemy_background9.body.allowGravity = false;
-        this.enemy_background9.anims.play('enemy_float');
+        // this.enemy_background9 = this.physics.add.sprite(120, 550, 'enemy', 0).setOrigin(0, 0);
+        // this.enemy_background9.body.allowGravity = false;
+        // this.enemy_background9.anims.play('enemy_float');
 
-        this.enemy_background10 = this.physics.add.sprite(100, 360, 'enemy', 0).setOrigin(0, 0);
-        this.enemy_background10.body.allowGravity = false;
-        this.enemy_background10.anims.play('enemy_float');
+        // this.enemy_background10 = this.physics.add.sprite(100, 360, 'enemy', 0).setOrigin(0, 0);
+        // this.enemy_background10.body.allowGravity = false;
+        // this.enemy_background10.anims.play('enemy_float');
         
     }
     
