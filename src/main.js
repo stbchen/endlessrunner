@@ -1,5 +1,5 @@
 // Endless Runner: Outer Space Outlaw
-// Stanley, Nile, Ben
+// Stanley, Nile, Ben Putaski
 // CMPM/ARTG 120
 
 'use strict';
@@ -27,3 +27,6 @@ const SCALE = 0.9;
 const tileSize = 75;
 
 let game = new Phaser.Game(config);
+
+
+//
