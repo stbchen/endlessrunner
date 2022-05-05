@@ -163,7 +163,7 @@ class Play extends Phaser.Scene {
 
         this.player.setCollideWorldBounds(false);
         this.player.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
-        this.health = 1;
+        this.health = 5;
         this.iframe = 0;
         this.jumps = 0;
         this.lastAnim;
@@ -236,6 +236,47 @@ class Play extends Phaser.Scene {
         this.time.delayedCall(500, this.lookBack, [], this);
 
         this.enemy2.anims.play('enemy_float');
+
+        //adding background enemies
+        this.enemy_background1 = this.physics.add.sprite(50, 300, 'enemy', 0).setOrigin(0, 0);
+        this.enemy_background1.body.allowGravity = false;
+        this.enemy_background1.anims.play('enemy_float');
+
+        this.enemy_background2 = this.physics.add.sprite(50, 400, 'enemy', 0).setOrigin(0, 0);
+        this.enemy_background2.body.allowGravity = false;
+        this.enemy_background2.anims.play('enemy_float');
+
+        this.enemy_background3 = this.physics.add.sprite(80, 450, 'enemy', 0).setOrigin(0, 0);
+        this.enemy_background3.body.allowGravity = false;
+        this.enemy_background3.anims.play('enemy_float');
+
+        this.enemy_background4 = this.physics.add.sprite(60, 500, 'enemy', 0).setOrigin(0, 0);
+        this.enemy_background4.body.allowGravity = false;
+        this.enemy_background4.anims.play('enemy_float');
+
+        this.enemy_background5 = this.physics.add.sprite(1, 550, 'enemy', 0).setOrigin(0, 0);
+        this.enemy_background5.body.allowGravity = false;
+        this.enemy_background5.anims.play('enemy_float');
+
+        this.enemy_background6 = this.physics.add.sprite(20, 450, 'enemy', 0).setOrigin(0, 0);
+        this.enemy_background6.body.allowGravity = false;
+        this.enemy_background6.anims.play('enemy_float');
+
+        this.enemy_background7 = this.physics.add.sprite(20, 350, 'enemy', 0).setOrigin(0, 0);
+        this.enemy_background7.body.allowGravity = false;
+        this.enemy_background7.anims.play('enemy_float');
+        
+        this.enemy_background8 = this.physics.add.sprite(10, 500, 'enemy', 0).setOrigin(0, 0);
+        this.enemy_background8.body.allowGravity = false;
+        this.enemy_background8.anims.play('enemy_float');
+
+        this.enemy_background9 = this.physics.add.sprite(120, 550, 'enemy', 0).setOrigin(0, 0);
+        this.enemy_background9.body.allowGravity = false;
+        this.enemy_background9.anims.play('enemy_float');
+
+        this.enemy_background10 = this.physics.add.sprite(100, 350, 'enemy', 0).setOrigin(0, 0);
+        this.enemy_background10.body.allowGravity = false;
+        this.enemy_background10.anims.play('enemy_float');
         
     }
     
