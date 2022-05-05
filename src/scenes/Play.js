@@ -14,6 +14,9 @@ class Play extends Phaser.Scene {
         this.load.image('night_mg', './assets/night_midground.png');
         this.load.image('night_fg', './assets/night_foreground.png');
 
+        this.load.image('ui_health', './assets/UI_health.png');
+        this.load.image('ui_jump', './assets/UI_jump.png');
+
         this.load.image('block', './assets/block.png');
         this.load.image('train', './assets/train.png');
 
@@ -37,6 +40,12 @@ class Play extends Phaser.Scene {
         this.dayBackground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_bg').setOrigin(0, 0);
         this.dayMidground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_mg').setOrigin(0, 0);
         this.dayForeground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'day_fg').setOrigin(0, 0);
+
+        this.health_bar = this.add.rectangle(125, 65, 180, 60, 0xFF0044).setOrigin(0, 0);
+        this.jump_bar = this.add.rectangle(125, 155, 180, 60, 0x3E8948).setOrigin(0, 0);
+
+        this.add.image(10, 60, 'ui_health').setScale(0.1).setOrigin(0, 0);
+        this.add.image(10, 150, 'ui_jump').setScale(0.1).setOrigin(0, 0);
         
         // Add train
         this.train = this.add.tileSprite(0, game.config.height - 75, game.config.width, 75, 'train').setOrigin(0, 0);
@@ -154,7 +163,7 @@ class Play extends Phaser.Scene {
 
         this.player.setCollideWorldBounds(false);
         this.player.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
-        this.health = 5;
+        this.health = 1;
         this.iframe = 0;
         this.jumps = 0;
         this.lastAnim;
@@ -222,8 +231,6 @@ class Play extends Phaser.Scene {
         this.e1appear = true;
         this.score = 0;
         this.scoreText = this.add.text(16, 16, 'Score: ' + this.score, { fontSize: '32px', fill: '#000' });
-        this.healthText = this.add.text(16, 50, 'Health: ' + this.health, { fontSize: '32px', fill: '#000' });
-        this.jumpText = this.add.text(16, 84, 'Jumps: ' + 3, { fontSize: '32px', fill: '#000' });
 
         // Play animations
         this.time.delayedCall(500, this.lookBack, [], this);
@@ -233,12 +240,13 @@ class Play extends Phaser.Scene {
     }
     
     update() {
+        this.health_bar.width = 36 * this.health;
+        this.jump_bar.width = 60 * this.jumps;
         // Check if game is not over
         if (!this.gameOver) {
             // Score
             this.score += 1;
-            this.scoreText.text = "Score: " + this.score;
-            this.jumpText.text = "Jumps: " + this.jumps;
+            this.scoreText.text = "Score: " + Math.floor(this.score/10);
 
         // Day/night cycle
         if (this.score % 1500 == 0) {
@@ -251,8 +259,6 @@ class Play extends Phaser.Scene {
                     ease: 'Power1'
                 })
                 this.scoreText.setColor("#FFF");
-                this.healthText.setColor("#FFF");
-                this.jumpText.setColor("#FFF");
             } else {
                 this.tweens.add({
                     targets: [this.dayBackground, this.dayMidground, this.dayForeground],
@@ -261,8 +267,6 @@ class Play extends Phaser.Scene {
                     ease: 'Power1'
                 })
                 this.scoreText.setColor("#000");
-                this.healthText.setColor("#000");
-                this.jumpText.setColor("#000");
             }
         }
             // Moving background
@@ -357,6 +361,7 @@ class Play extends Phaser.Scene {
         }
 
         if (this.health === 0) {
+            this.gameOver = true;
             this.music.stop();
             this.tweens.add({
                 targets: [this.player],
@@ -366,8 +371,8 @@ class Play extends Phaser.Scene {
                 ease: 'Power2'
             });
             this.time.delayedCall(1000, () => {
-                this.scene.start('gameoverScene');
-            })
+                this.scene.start('gameoverScene', {score: this.score});
+            });
         }
     }
 
@@ -406,7 +411,6 @@ class Play extends Phaser.Scene {
             });
             this.player.anims.play('damage');
             this.health--;
-            this.healthText.text = "Health: " + this.health;
         }
         if (this.counter < 20) {
             this.player.x -= 5;

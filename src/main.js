@@ -22,6 +22,7 @@ let config = {
 };
 
 let cursors, keyR, keyESC;
+let highScore = 0;
 const SCALE = 0.9;
 const tileSize = 75;
 
