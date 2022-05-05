@@ -387,6 +387,7 @@ class Play extends Phaser.Scene {
             this.delay1 = 0;
         }
 
+        //controls gameover
         if (this.health === 0) {
             this.gameOver = true;
             this.music.stop();
