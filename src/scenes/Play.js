@@ -366,6 +366,7 @@ class Play extends Phaser.Scene {
 
         // Go back to main menu
          if (Phaser.Input.Keyboard.JustDown(keyESC)) {
+            this.music.stop();
             this.scene.start('menuScene');
          }
 
