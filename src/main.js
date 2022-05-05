@@ -1,6 +1,6 @@
 // Endless Runner: Outer Space Outlaw
 // Stanley Chen, Nile Imtiaz, Ben Putaski
-//Completed 5/4/2022
+// Completed 5/4/2022
 // CMPM/ARTG 120
 
 'use strict';
